@@ -1,0 +1,61 @@
+version: "2"
+
+services:
+  app:
+    image: juniyadi/php-composer:8.0
+    restart: on-failure
+    tty: true
+    volumes:
+      - ./code:/code:rw,cached
+    networks:
+      - code-network
+
+  redis:
+    image: redis
+    restart: on-failure
+    networks:
+      - code-network
+
+  web:
+    image: nginx:alpine
+    restart: on-failure
+    tty: true
+    ports:
+      - "80:80"
+    volumes:
+      - ./code:/code:rw,cached
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - code-network
+
+  db:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: on-failure
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: laravel_docker
+      MYSQL_DATABASE: laravel_dock
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+    ports:
+      - "3306:3306"
+    networks:
+      - code-network
+
+  mail:
+    image: mailhog/mailhog
+    restart: on-failure
+    command: ["-storage=maildir", "-maildir-path=/maildir"]
+    volumes:
+      - ./maildir:/maildir
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - code-network
+
+networks:
+  code-network:
+    driver: bridge
