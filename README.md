@@ -1,4 +1,11 @@
-# Docker Backend
+# Docker Laravel 8
+
+Running Laravel 8 in Docker Without [Laravel Sail](https://laravel.com/docs/8.x/sail)
+
+For Laravel < 8, you can change PHP Version:
+
+- PHP 8 => **juniyadi/php-composer:8.0**
+- PHP 7.4 => **juniyadi/php-composer:7.4**
 
 ## Start Docker
 
@@ -55,3 +62,8 @@ docker-compose exec app php artisan migrate
 ```bash
 docker-compose exec app php artisan make:model <ModelName> -m
 ```
+
+### Web Access
+
+- Laravel => http://localhost
+- Mailhogs => http://localhost:8025
